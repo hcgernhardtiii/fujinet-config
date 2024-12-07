@@ -10,9 +10,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <texttool.h>
-#include <peekpoke.h>
-#include <conio.h>
-#include <apple2.h>
+#include <coniogs.h>
+#include <apple2gs.h>
 
 static char buffer[121];
 static unsigned char x;
@@ -49,23 +48,19 @@ void gotoxy (unsigned char x, unsigned char y)
   gotox(x);
 }
 
-unsigned char wherex (void)
-/* Return the X position of the cursor */
-{
-  return PEEK(0x57b);
-}
-
-unsigned char wherey (void)
-/* Return the Y position of the cursor */
-{
-  return PEEK(0x25);
-}
-
 void cputc (char c)
 /* Output one character at the current cursor position */
 {
   WriteChar(c);
 }
+
+void cputcxy (unsigned char x, unsigned char y, char c)
+/* Same as "gotoxy (x, y); cputc (c);" */
+{
+  gotoxy(x, y);
+  WriteChar(c);
+}
+
 
 void cputs (const char* s)
 /* Output a NUL-terminated string at the current cursor position */
@@ -83,6 +78,13 @@ void cputs (const char* s)
     if (*++s == '\n' && x == '\r')
       s++;
   }
+}
+
+void cputsxy (unsigned char x, unsigned char y, const char* s)
+/* Same as "gotoxy (x, y); puts (s);" */
+{
+  gotoxy(x, y);
+  cputs(s);
 }
 
 int cprintf (const char* format, ...)
@@ -154,14 +156,6 @@ void cclearxy (unsigned char x, unsigned char y, unsigned char length)
   POKE(0x24, x);
   POKE(0x57b, x);
   cclear(length);
-}
-
-/* Functions from apple2 */
-
-unsigned char get_ostype (void)
-/* Get the machine type. Returns one of the APPLE_xxx codes. */
-{
-  return APPLE_IIGS;
 }
 
 #endif /* __ORCAC__ */

@@ -159,11 +159,7 @@ void select_slot_choose()
 
 void select_slot_done()
 {
-#ifdef __ORCAC__
-  static char filename[256];
-#else
   char filename[256];
-#endif
 
 #ifdef BUILD_APPLE2
   bool mnt = false;
@@ -223,15 +219,7 @@ void select_slot_done()
     io_set_directory_position(pos);
 
     memcpy(deviceSlots[selected_device_slot].file,io_read_directory(DIR_MAX_LEN,0),DIR_MAX_LEN);
-#ifdef BUILD_APPLE2
-    // DiskII is read only so force it for those slots
-    if (selected_device_slot == 4 || selected_device_slot == 5)
-      deviceSlots[selected_device_slot].mode=MODE_READ;
-    else
-      deviceSlots[selected_device_slot].mode=mode;
-#else
     deviceSlots[selected_device_slot].mode=mode;
-#endif // BUILD_APPLE2
     deviceSlots[selected_device_slot].hostSlot=selected_host_slot;
 
 #ifndef BUILD_ATARI

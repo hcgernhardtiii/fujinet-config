@@ -16,7 +16,6 @@
 #define DIR_MAX_LEN 31
 #define ENTRIES_PER_PAGE 10
 #else
-#include <conio.h>
 #include <string.h>
 #endif /* CMOC_VERSION */
 
@@ -402,11 +401,7 @@ unsigned select_file_entry_type(void)
 
 void select_file_new(void)
 {
-#ifdef __ORCAC__
-  static char f[128];
-#else
   char f[128];
-#endif
   char k;
 
   memset(f, 0, 128);

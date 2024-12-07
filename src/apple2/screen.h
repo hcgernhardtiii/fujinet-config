@@ -12,13 +12,12 @@
 #include "../fuji_typedefs.h"
 
 void screen_init(void);
-void screen_error(const char *c);
+void screen_error(const char *s);
 
 void screen_putlcc(char c);
-void screen_put_inverse(const char c);
+void screen_put_inverse(char c);
 void screen_print_inverse(const char *s);
 void screen_print_menu(const char *si, const char *sc);
-void screen_fujinetlogo(void);
 
 void screen_set_wifi(AdapterConfigExtended* acx);
 void screen_set_wifi_display_ssid(char n, SSIDInfo *s);
@@ -70,5 +69,7 @@ void screen_select_slot(char *e);
 void screen_select_slot_choose(void);
 void screen_select_slot_mode(void);
 void screen_select_slot_eject(unsigned char ds);
+
+bool screen_mount_and_boot_lobby(void);
 #endif /* SCREEN_H */
 #endif /* BUILD_APPLE2 */

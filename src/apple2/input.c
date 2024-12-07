@@ -3,17 +3,24 @@
  * Input routines
  */
 
+#ifdef __ORCAC__
+#include <coniogs.h>
+#include <apple2gs.h>
+#else
 #include <conio.h>
-#include <string.h>
-#include <stdbool.h>
 #include <apple2.h>
 #include <peekpoke.h>
+#endif
+#include <string.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "globals.h"
 #include "input.h"
 #include "bar.h"
 #include "screen.h"
+#include "mount_and_boot.h"
+
 #include "../set_wifi.h"
 #include "../die.h"
 #include "../hosts_and_devices.h"
@@ -91,7 +98,7 @@ void input_line(unsigned char x, unsigned char y, unsigned char o, char *c, unsi
   while(1)
   {
     gotox(x + i);
-    cputc('_'); // turn on cursor - does not have effect on Apple IIc
+    cputc('_');
     gotox(x + i);
     a = cgetc();
     if (ostype == APPLE_IIIEM)   // check for Apple3 lowercase
@@ -125,7 +132,6 @@ void input_line(unsigned char x, unsigned char y, unsigned char o, char *c, unsi
     case KEY_RETURN:
       cputc(' ');
       c[i] = 0;
-      cursor(0); // turn off cursor
       return; // done
       break;
     default:
@@ -468,6 +474,9 @@ HDSubState input_hosts_and_devices_hosts(void)
   case KEY_TAB:
   case 'T':
     bar_clear(false);
+    // Switching view, reset selected
+    selected_device_slot = 0;
+    selected_host_slot = 0;
     return HD_DEVICES;
   case KEY_RETURN:
     selected_host_slot = bar_get();
@@ -506,6 +515,10 @@ HDSubState input_hosts_and_devices_hosts(void)
     bar_up();
     selected_host_slot = bar_get();
     return HD_HOSTS;
+  case 'l':
+  case 'L':
+    mount_and_boot_lobby();
+    return HD_HOSTS;
   case KEY_DOWN_ARROW:
   case 'm':
   case 'M':
@@ -538,6 +551,9 @@ HDSubState input_hosts_and_devices_devices(void)
     case KEY_TAB:
     case 'T':
       bar_clear(false);
+      // Switching view, reset selected
+      selected_device_slot = 0;
+      selected_host_slot = 0;
       return HD_HOSTS;
     case 'E':
     case 'e':
@@ -567,6 +583,10 @@ HDSubState input_hosts_and_devices_devices(void)
       selected_device_slot=bar_get();
       hosts_and_devices_long_filename();
       return HD_DEVICES;
+    case 'l':
+    case 'L':
+      mount_and_boot_lobby();
+      return HD_HOSTS;
     case KEY_DOWN_ARROW:
     case 'm':
     case 'M':
